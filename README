@@ -1,0 +1,8 @@
+A simple fan speed control demon for Linux on an Apple Mac Book Pro.
+License: GPL3
+(C) Leon Szpilewski
+
+My Macbook Pro 5,5 runs pretty hot til the fan on linux kicks in. 
+This is an attempt to create a demon that will fix this behavior.
+
+
