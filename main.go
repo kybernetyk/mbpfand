@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"time"
-	)
+)
 
 var control_chan chan string = make(chan string)
 
@@ -20,7 +20,7 @@ func seconds(n int64) int64 {
 
 func main() {
 	ticker := time.NewTicker(seconds(10))
-	L:
+L:
 	for {
 		select {
 		case msg := <-control_chan:
