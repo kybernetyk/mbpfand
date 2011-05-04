@@ -1,0 +1,6 @@
+die temp: 
+	TC0D
+	/sys/bus/platform/devices/applesmc.768/temp5_*
+
+fan speed:
+	/sys/bus/platform/devices/applesmc.768/fan1_min
