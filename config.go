@@ -14,3 +14,10 @@ const (
 	g_fan_max        = "fan1_max"
 	g_fan_out        = "fan1_min" //write to ths to set the fan RPM
 )
+
+const (
+	g_min_temp      = 40.0 //what we wish our temp would always be in a world full of rainbow shitting unicorns
+	g_min_fan_speed = 2000.0
+)
+
+var g_max_fan_speed float64 = 6200.0

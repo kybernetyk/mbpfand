@@ -8,14 +8,8 @@ import (
 
 var control_chan chan string = make(chan string)
 
-//stupid
 func calc_fan_speed(temp float64) float64 {
-	rpm := 6200.0/90.0*temp
-	return rpm
-}
-
-func calc_fan_speed_log(temp float64) float64 {
-	x := math.Log10(temp/40.0)/math.Log10(2.0)*6200.00
+	x := math.Log10(temp/g_min_temp)/math.Log10(2.0)*g_max_fan_speed
 	//clipping to min/max will be done by SetFanSpeed()
 	return x
 }
@@ -26,7 +20,7 @@ func DoWork() {
 	speed := GetFanSpeed()
 	fmt.Println("Fan Speed:", speed)
 
-	rpm := calc_fan_speed_log(f)
+	rpm := calc_fan_speed(f)
 	fmt.Println("Setting Fan Speed to:", int32(rpm))
 	fmt.Println("")
 	SetFanSpeed(rpm)
@@ -37,6 +31,9 @@ func seconds(n int64) int64 {
 }
 
 func main() {
+	g_max_fan_speed = readSensor(g_fan_max)
+	fmt.Println("Max Fan Speed for this system:", g_max_fan_speed)
+
 	ticker := time.NewTicker(seconds(10))
 L:
 	for {

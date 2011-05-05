@@ -7,6 +7,7 @@ import (
 	"bytes"
 )
 
+//todo: read moar sensors (preferably 2 left / 2 right)
 func GetAverageTemp() float64 {
 	temp1 := readSensor(g_cpu_die_sensor)
 	avg := temp1 / 1000.0
@@ -19,12 +20,11 @@ func GetFanSpeed() float64 {
 }
 
 func SetFanSpeed(new_speed float64) {
-	fan_max := readSensor(g_fan_max)
-	if new_speed > fan_max {
-		new_speed = fan_max
+	if new_speed > g_max_fan_speed {
+		new_speed = g_max_fan_speed
 	}
-	if new_speed < 2000.0 {
-		new_speed = 2000.0
+	if new_speed < g_min_fan_speed {
+		new_speed = g_min_fan_speed
 	}
 	s := fmt.Sprintf("%d", int64(new_speed))
 	b := []byte(s)
