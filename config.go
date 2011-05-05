@@ -12,5 +12,5 @@ const (
 	g_cpu_die_sensor = "temp5_input"
 	g_fan_sensor     = "fan1_input"
 
-	g_fan_sensor_out = "fan1_min" //write to ths to set the fan RPM
+	g_fan_out = "fan1_min" //write to ths to set the fan RPM
 )

@@ -12,6 +12,14 @@ func DoWork() {
 	fmt.Println("Average temperature:", f)
 	speed := GetFanSpeed()
 	fmt.Println("Fan Speed:", speed)
+
+	rpm := 2000.0/40.0*f
+	if rpm < 2000.0 {
+		rpm = 2000.0
+	}
+	fmt.Println("Setting Fan Speed to:", int32(rpm))
+	fmt.Println("")
+	SetFanSpeed(rpm)
 }
 
 func seconds(n int64) int64 {

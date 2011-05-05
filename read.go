@@ -18,6 +18,17 @@ func GetFanSpeed() float64 {
 	return speed
 }
 
+func SetFanSpeed(new_speed float64) {
+	s := fmt.Sprintf("%d", int64(new_speed))	
+	b := []byte(s)
+
+	err := ioutil.WriteFile(g_sensors_base_dir + g_fan_out, b, 0644) 
+	if err != nil {
+		fmt.Println("Couldn't set fan speed:", err.String())
+	}
+}
+
+
 func readSensor(sensorname string) float64 {
 	s, err := ioutil.ReadFile(g_sensors_base_dir + sensorname)
 	if err != nil {
