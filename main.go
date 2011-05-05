@@ -9,9 +9,13 @@ import (
 var control_chan chan string = make(chan string)
 
 func calc_fan_speed(temp float64) float64 {
-	x := math.Log10(temp/g_min_temp)/math.Log10(2.0)*g_max_fan_speed
-	//clipping to min/max will be done by SetFanSpeed()
-	return x
+	switch (g_opt_mode) {
+	case mode_Default:
+		return math.Log10(temp/40.0) / 0.3 * g_max_fan_speed  //quiet but not so cool
+	case mode_Aggressive:
+		return math.Log10(temp/30.0) / 0.35 * g_max_fan_speed //cooler but also louder
+	}
+	return g_min_fan_speed
 }
 
 //check temp, set speed

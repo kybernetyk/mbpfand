@@ -19,14 +19,19 @@ const (
 )
 
 const (
-	g_min_temp = 40.0 //what we wish our temp would always be to set the fan to 0rpm
-										//chosing 40.0 here will make our fan spin @ 2000rpm @ 50.0C ...
-
 	g_min_fan_speed = 2000.0
 )
+var g_max_fan_speed float64 = 6200.0
 
 const (
 	g_job_fire_time = 10.0	//how often the DoWork() function shall be called. time in seconds
 )
 
-var g_max_fan_speed float64 = 6200.0
+type ModeType int32
+
+const (
+	mode_Default = iota
+	mode_Aggressive
+)
+
+var g_opt_mode ModeType = mode_Default
