@@ -19,10 +19,17 @@ func GetFanSpeed() float64 {
 }
 
 func SetFanSpeed(new_speed float64) {
-	s := fmt.Sprintf("%d", int64(new_speed))	
+	fan_max := readSensor(g_fan_max)
+	if new_speed > fan_max {
+		new_speed = fan_max
+	}
+	if new_speed < 2000.0 {
+		new_speed = 2000.0
+	}
+	s := fmt.Sprintf("%d", int64(new_speed))
 	b := []byte(s)
 
-	err := ioutil.WriteFile(g_sensors_base_dir + g_fan_out, b, 0644) 
+	err := ioutil.WriteFile(g_sensors_base_dir+g_fan_out, b, 0644)
 	if err != nil {
 		fmt.Println("Couldn't set fan speed:", err.String())
 	}
