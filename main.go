@@ -14,6 +14,7 @@ func calc_fan_speed(temp float64) float64 {
 	return x
 }
 
+//check temp, set speed
 func DoWork() {
 	f := GetAverageTemp()
 	fmt.Println("Average temperature:", f)
@@ -26,6 +27,7 @@ func DoWork() {
 	SetFanSpeed(rpm)
 }
 
+//turns seconds into nanoseconds ... for all the folks who hate zeros
 func seconds(n int64) int64 {
 	return 1000000000 * n
 }
@@ -34,7 +36,7 @@ func main() {
 	g_max_fan_speed = readSensor(g_fan_max)
 	fmt.Println("Max Fan Speed for this system:", g_max_fan_speed)
 
-	ticker := time.NewTicker(seconds(10))
+	ticker := time.NewTicker(seconds(g_job_fire_time))
 L:
 	for {
 		select {
@@ -43,7 +45,7 @@ L:
 				break L
 			}
 		case <-ticker.C:
-			go DoWork()
+			DoWork()
 		}
 	}
 }
