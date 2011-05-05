@@ -3,9 +3,22 @@ package main
 import (
 	"fmt"
 	"time"
+	"math"
 )
 
 var control_chan chan string = make(chan string)
+
+//stupid
+func calc_fan_speed(temp float64) float64 {
+	rpm := 6200.0/90.0*temp
+	return rpm
+}
+
+func calc_fan_speed_log(temp float64) float64 {
+	x := math.Log10(temp/40.0)/math.Log10(2.0)*6200.00
+	//clipping to min/max will be done by SetFanSpeed()
+	return x
+}
 
 func DoWork() {
 	f := GetAverageTemp()
@@ -13,10 +26,7 @@ func DoWork() {
 	speed := GetFanSpeed()
 	fmt.Println("Fan Speed:", speed)
 
-	rpm := 2000.0/40.0*f
-	if rpm < 2000.0 {
-		rpm = 2000.0
-	}
+	rpm := calc_fan_speed_log(f)
 	fmt.Println("Setting Fan Speed to:", int32(rpm))
 	fmt.Println("")
 	SetFanSpeed(rpm)
