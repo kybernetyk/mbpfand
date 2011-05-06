@@ -3,44 +3,64 @@ package main
 import (
 	"fmt"
 	"time"
-	"math"
+	"os"
+	"flag"
 )
 
-var control_chan chan string = make(chan string)
+var control_chan = make(chan string)
 
-func calc_fan_speed(temp float64) float64 {
-	switch (g_opt_mode) {
-	case mode_Default:
-		return math.Log10(temp/40.0) / 0.3 * g_max_fan_speed  //quiet but not so cool
-	case mode_Aggressive:
-		return math.Log10(temp/30.0) / 0.35 * g_max_fan_speed //cooler but also louder
-	}
-	return g_min_fan_speed
-}
+var (
+	mode         = flag.String("m", "default", "The mode to use. default or aggressive")
+	show_version = flag.Bool("V", false, "Print mbpfand's version and exit.")
+	be_verbose   = flag.Bool("v", false, "Verbose output.")
+	update_rate  = flag.Int64("u", 10, "Update rate in seconds.")
+)
 
-//check temp, set speed
-func DoWork() {
-	f := GetAverageTemp()
-	fmt.Println("Average temperature:", f)
-	speed := GetFanSpeed()
-	fmt.Println("Fan Speed:", speed)
-
-	rpm := calc_fan_speed(f)
-	fmt.Println("Setting Fan Speed to:", int32(rpm))
-	fmt.Println("")
-	SetFanSpeed(rpm)
-}
 
 //turns seconds into nanoseconds ... for all the folks who hate zeros
 func seconds(n int64) int64 {
 	return 1000000000 * n
 }
 
-func main() {
-	g_max_fan_speed = readSensor(g_fan_max)
-	fmt.Println("Max Fan Speed for this system:", g_max_fan_speed)
+func verbOutp(v ...interface{}) {
+	if *be_verbose {
+		fmt.Fprintf(os.Stdout, fmt.Sprintln(v...))
+	}
+}
 
-	ticker := time.NewTicker(seconds(g_job_fire_time))
+func Usage() {
+	fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS]\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "\nOptions:\n")
+	flag.PrintDefaults()
+}
+
+func main() {
+	flag.Usage = Usage
+	flag.Parse()
+
+	if *show_version {
+		fmt.Println("mbpfand", g_mbpfand_version)
+		return
+	}
+
+	switch *mode {
+	case "aggressive":
+		g_opt_mode = mode_Aggressive
+	default:
+		g_opt_mode = mode_Default
+	}
+	modes := map[ModeType]string{
+		mode_Aggressive: "[aggressive]",
+		mode_Default:    "[default]",
+	}
+	verbOutp("Using Mode:", modes[g_opt_mode])
+
+	g_max_fan_speed = readSensor(g_fan_max)
+	verbOutp("Max Fan Speed for this system:", g_max_fan_speed)
+
+	verbOutp("Update Rate is:", *update_rate)
+	ticker := time.NewTicker(seconds(*update_rate))
+	verbOutp("Scheduled ...\n")
 L:
 	for {
 		select {

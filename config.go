@@ -1,4 +1,9 @@
 package main
+
+const (
+	g_mbpfand_version = "0.04"
+)
+
 /*
  Note: I've got a 13" MBP 5,5 - so these settings are pretty
  specific to this model. It has only one Fan - whereas the
@@ -22,10 +27,6 @@ const (
 	g_min_fan_speed = 2000.0
 )
 var g_max_fan_speed float64 = 6200.0
-
-const (
-	g_job_fire_time = 10.0	//how often the DoWork() function shall be called. time in seconds
-)
 
 type ModeType int32
 
