@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 	"os"
+	"os/signal"
+	"syscall"
 	"flag"
 )
 
@@ -18,7 +20,7 @@ var (
 	print_speed  = flag.Bool("Pf", false, "Print current fan speed and exit.")
 	print_temp   = flag.Bool("Pt", false, "Print current temp and exit.")
 	force_speed  = flag.Int64("s", 2000, "Fan speed for -S option.")
-	show_usage =	flag.Bool("h", false, "Show usage options and exit.")
+	show_usage   = flag.Bool("h", false, "Show usage options and exit.")
 )
 
 
@@ -65,7 +67,7 @@ func main() {
 	}
 
 	g_max_fan_speed = readSensor(g_fan_max)
-	
+
 	if *set_speed {
 		SetFanSpeed(float64(*force_speed))
 		return
@@ -85,6 +87,8 @@ func main() {
 		return
 	}
 
+	defer SetFanSpeed(g_min_fan_speed)
+
 	verbOutp("Using Mode:", modes[g_opt_mode])
 	verbOutp("Max Fan Speed for this system:", g_max_fan_speed)
 	verbOutp("Update Rate is:", *update_rate)
@@ -93,11 +97,19 @@ L:
 	for {
 		select {
 		case msg := <-control_chan:
+							fmt.Println("message: " + msg)
 			if msg == "quit" {
 				break L
 			}
 		case <-ticker.C:
 			DoWork()
+
+		case sig := <-signal.Incoming:
+			fmt.Println("Got signal: " + sig.String())
+			switch sig.(signal.UnixSignal) {
+			case syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGHUP:
+				return
+			}
 		}
 	}
 }
