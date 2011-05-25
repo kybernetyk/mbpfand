@@ -15,8 +15,9 @@ works pretty well ;)
 Compatibility can only be ensured with MBP 5,5 13" models yet.
 I heard rumors of the bigger MBPs (15/17") having more than one
 fan built in. But as I don't have access to those models I can't
-verify that. You are however welocome to fork the code and build
-in support for your model.
+verify that. You are however welocome to send me an email,
+open an issue in the issue tracker with your model's information.
+(Or fork the code and build and hack it yourself).
 
 
 How To Build
