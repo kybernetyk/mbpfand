@@ -106,10 +106,12 @@ L:
 			DoWork()
 
 		case sig := <-signal.Incoming:
-			fmt.Println("Got signal: " + sig.String())
+			verbOutp("Got signal: " + sig.String())
 			switch sig.(signal.UnixSignal) {
 			case syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGHUP:
 				return
+				//channels seem not to be working after getting a SIGTERM, SIGQUIT, etc
+				//so we have to return from here
 			}
 		}
 	}
