@@ -52,6 +52,8 @@ func main() {
 
 	if *show_version {
 		fmt.Println("mbpfand", g_mbpfand_version)
+		fmt.Println("\t(c) Leon Szpilewski, 2011")
+		fmt.Println("\tLicensed under GPL v3")
 		return
 	}
 
@@ -97,7 +99,6 @@ L:
 	for {
 		select {
 		case msg := <-control_chan:
-							fmt.Println("message: " + msg)
 			if msg == "quit" {
 				break L
 			}
