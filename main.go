@@ -107,7 +107,7 @@ L:
 
 		case sig := <-signal.Incoming:
 			verbOutp("Got signal: " + sig.String())
-			switch sig.(signal.UnixSignal) {
+			switch sig.(os.UnixSignal) {
 			case syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGHUP:
 				return
 				//channels seem not to be working after getting a SIGTERM, SIGQUIT, etc
