@@ -1,6 +1,6 @@
 A simple fan speed control demon for Linux + Apple Mac Book Pro (5,5).
 License: GPL3
-(C) Leon Szpilewski
+(C) Leon Szpilewski / leon.szpilewski@gmail.com
 
 My Macbook Pro 5,5 runs pretty hot till the fan on linux kicks in. 
 This is an attempt to create a demon that will fix this behavior.
@@ -23,13 +23,14 @@ open an issue in the issue tracker with your model's information.
 How To Build
 ============
 
-The demon is written in Go and requires the newest Go weekly.
-Though the code isn't that complicated and it should work with any
-newer Go version. To build the project just type:
+1) The demon is written in Go and requires Go 1. 
+Get it from http://golang.org/ 
 
-> gomake
+2) To build the project just type:
 
-To run the demon (which isn't a demon yet):
+> go build 
+
+3) To run the demon (which isn't a demon yet):
 > sudo ./mbpfand
 
 
