@@ -25,8 +25,8 @@ var (
 
 
 //turns seconds into nanoseconds ... for all the folks who hate zeros
-func seconds(n int64) int64 {
-	return 1000000000 * n
+func seconds(n int64) time.Duration {
+	return (time.Duration(1000000000) * time.Duration(n))
 }
 
 func verbOutp(v ...interface{}) {
@@ -94,6 +94,11 @@ func main() {
 	verbOutp("Using Mode:", modes[g_opt_mode])
 	verbOutp("Max Fan Speed for this system:", g_max_fan_speed)
 	verbOutp("Update Rate is:", *update_rate)
+
+	//register signal handler
+	sigchan := make(chan os.Signal)
+	signal.Notify(sigchan,syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGHUP)
+							
 	ticker := time.NewTicker(seconds(*update_rate))
 L:
 	for {
@@ -105,14 +110,11 @@ L:
 		case <-ticker.C:
 			DoWork()
 
-		case sig := <-signal.Incoming:
+		//ok, no idea if this works and why the hell we're doing ths
+		//I guess some time ago channels got ignored in the select block?
+		case sig := <-sigchan:
 			verbOutp("Got signal: " + sig.String())
-			switch sig.(os.UnixSignal) {
-			case syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGHUP:
-				return
-				//channels seem not to be working after getting a SIGTERM, SIGQUIT, etc
-				//so we have to return from here
-			}
+			return
 		}
 	}
 }

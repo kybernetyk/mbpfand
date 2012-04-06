@@ -1,11 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
-	"strconv"
-	"bytes"
 	"os"
+	"strconv"
 )
 
 //todo: read moar sensors (preferably 2 left / 2 right)
@@ -32,13 +32,12 @@ func SetFanSpeed(new_speed float64) {
 
 	err := ioutil.WriteFile(g_sensors_base_dir+g_fan_out, b, 0644)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Couldn't set fan speed: %s\n", err.String())
+		fmt.Fprintf(os.Stderr, "Couldn't set fan speed: %s\n", err)
 		return
 	}
 	verbOutp("Setting Fan Speed to:", int32(new_speed))
 	verbOutp("")
 }
-
 
 func readSensor(sensorname string) float64 {
 	s, err := ioutil.ReadFile(g_sensors_base_dir + sensorname)
@@ -48,7 +47,7 @@ func readSensor(sensorname string) float64 {
 	}
 	s = bytes.Trim(s, "\r\n")
 
-	f, err := strconv.Atof64(string(s))
+	f, err := strconv.ParseFloat(string(s), 64)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Couldn't convert value to float64: ", string(s), s)
 		return 0.0
